@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android1homework6.R
@@ -19,14 +20,8 @@ class CatFragment : Fragment() , OnItemClick {
 
     private var recyclerView: RecyclerView? = null
     private var repository = CarRepository()
-    private var carAdapter = CatAdapter(repository.getLisOfCat())
+    private var catAdapter = CatAdapter(this,repository.getLisOfCat())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,20 +35,25 @@ class CatFragment : Fragment() , OnItemClick {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recyclerView_catFragment)
 
-        recyclerView = view?.findViewById(R.id.recyclerView_catFragment)
+        initialization()
+
+    }
+
+    private fun initialization() {
         val layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView?.layoutManager = layoutManager
-        recyclerView?.adapter = carAdapter
+        recyclerView?.adapter = catAdapter
+
     }
 
-    override fun onClick(catModel: CatModel) {
-            val detailFragment = DetailFragment()
-            val bundle = Bundle()
-            bundle.putSerializable("Dan", catModel)
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id. fragment_container_view,detailFragment)
-                .addToBackStack(null)
-                .commit()
+    override fun onShortClick(catModel: CatModel) {
+        val detailFragment = DetailFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("Dan",catModel)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, DetailFragment().javaClass,bundle)
+            .addToBackStack(null)
+            .commit()
     }
+
 }
